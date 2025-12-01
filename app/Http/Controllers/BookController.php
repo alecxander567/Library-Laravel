@@ -31,7 +31,6 @@ class BookController extends Controller
         return redirect()->route('home')->with('success', 'Book added successfully!');
     }
 
-    // --- EDIT / UPDATE FUNCTIONALITY ---
     public function update(Request $request, $id)
     {
         $book = Book::findOrFail($id);
