@@ -30,4 +30,32 @@ class BookController extends Controller
 
         return redirect()->route('home')->with('success', 'Book added successfully!');
     }
+
+    // --- EDIT / UPDATE FUNCTIONALITY ---
+    public function update(Request $request, $id)
+    {
+        $book = Book::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'author' => 'required|string|max:255',
+            'available' => 'required|integer|min:0',
+        ]);
+
+        $book->update([
+            'name' => $request->name,
+            'author' => $request->author,
+            'available' => $request->available,
+        ]);
+
+        return redirect()->route('home')->with('success', 'Book updated successfully!');
+    }
+
+    public function destroy($id)
+    {
+        $book = Book::findOrFail($id);
+        $book->delete();
+
+        return redirect()->route('home')->with('success', 'Book deleted successfully!');
+    }
 }

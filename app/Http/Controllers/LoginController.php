@@ -10,7 +10,7 @@ class LoginController extends Controller
 
     public function show()
     {
-        return view('auth.login'); 
+        return view('auth.login');
     }
 
     public function login(Request $request)
@@ -23,8 +23,8 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate(); 
-            return redirect()->route('home'); 
+            $request->session()->regenerate();
+            return redirect()->route('home');
         }
 
         return back()->withErrors([

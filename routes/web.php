@@ -15,4 +15,6 @@ Route::post('/register', [RegisterController::class, 'store'])->name('register.s
 Route::post('/login', [LoginController::class, 'login'])->name('login.perform');
 Route::get('/home', [BookController::class, 'index'])->name('home');
 Route::post('/books/store', [BookController::class, 'store'])->name('books.store');
+Route::put('/books/{id}/update', [BookController::class, 'update'])->name('books.update');
+Route::delete('/books/{id}/delete', [BookController::class, 'destroy'])->name('books.destroy');
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout.perform');
