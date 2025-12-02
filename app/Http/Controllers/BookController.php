@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Book;
+use App\Enums\Genre;
 
 class BookController extends Controller
 {
@@ -20,12 +21,14 @@ class BookController extends Controller
             'name' => 'required|string|max:255',
             'author' => 'required|string|max:255',
             'available' => 'required|integer|min:0',
+            'genre' => 'required|string|in:' . implode(',', array_column(Genre::cases(), 'value')), // validate enum
         ]);
 
         Book::create([
             'name' => $request->name,
             'author' => $request->author,
             'available' => $request->available,
+            'genre' => $request->genre,
         ]);
 
         return redirect()->route('home')->with('success', 'Book added successfully!');
@@ -39,12 +42,14 @@ class BookController extends Controller
             'name' => 'required|string|max:255',
             'author' => 'required|string|max:255',
             'available' => 'required|integer|min:0',
+            'genre' => 'required|string|in:' . implode(',', array_column(Genre::cases(), 'value')), // validate enum
         ]);
 
         $book->update([
             'name' => $request->name,
             'author' => $request->author,
             'available' => $request->available,
+            'genre' => $request->genre,
         ]);
 
         return redirect()->route('home')->with('success', 'Book updated successfully!');

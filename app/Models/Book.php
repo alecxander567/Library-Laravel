@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Genre;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,6 +13,11 @@ class Book extends Model
     protected $fillable = [
         'name',
         'author',
-        'available', 
+        'available',
+        'genre',
+    ];
+
+    protected $casts = [
+        'genre' => Genre::class,
     ];
 }

@@ -77,6 +77,16 @@
                         min="0" value="1" required>
                 </div>
 
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-1">Genre</label>
+                    <select name="genre" class="w-full border px-3 py-2 rounded text-black" required>
+                        @foreach (\App\Enums\Genre::cases() as $genre)
+                            <option value="{{ $genre->value }}">{{ ucfirst(str_replace('_', ' ', $genre->value)) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <div class="flex justify-end space-x-3">
                     <button type="button" @click="open = false; $dispatch('modal-closed')"
                         class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400">Cancel</button>
@@ -115,6 +125,17 @@
                             <label for="bookAvailable" class="block text-gray-700 mb-1">Available</label>
                             <input type="number" class="w-full border px-3 py-2 rounded text-black"
                                 id="bookAvailable" name="available" min="0">
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="bookGenre" class="block text-gray-700 mb-1">Genre</label>
+                            <select class="w-full border px-3 py-2 rounded text-black" id="bookGenre" name="genre">
+                                @foreach (\App\Enums\Genre::cases() as $genre)
+                                    <option value="{{ $genre->value }}">
+                                        {{ ucfirst(str_replace('_', ' ', $genre->value)) }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
 
@@ -173,28 +194,54 @@
         </header>
 
         <div class="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-            <div class="bg-white shadow-md rounded-lg p-6 text-center">
-                <h2 class="text-xl font-semibold mb-2">Total Books</h2>
+            <div
+                class="bg-white shadow-md rounded-lg p-6 text-center flex flex-col items-center justify-center space-y-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-600" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 20l9-5-9-5-9 5 9 5z" />
+                </svg>
+                <h2 class="text-xl font-semibold">Total Books</h2>
                 <p class="text-3xl font-bold text-blue-600">{{ $books->count() }}</p>
             </div>
 
-            <div class="bg-white shadow-md rounded-lg p-6 text-center">
-                <h2 class="text-xl font-semibold mb-2">Borrowed Books</h2>
+            <div
+                class="bg-white shadow-md rounded-lg p-6 text-center flex flex-col items-center justify-center space-y-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-600" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 17v-6h6v6m2 4H7a2 2 0 01-2-2V7a2 2 0 012-2h5l2 2h5a2 2 0 012 2v12a2 2 0 01-2 2z" />
+                </svg>
+                <h2 class="text-xl font-semibold">Borrowed Books</h2>
                 <p class="text-3xl font-bold text-blue-600">0</p>
             </div>
 
-            <div class="bg-white shadow-md rounded-lg p-6 text-center">
-                <h2 class="text-xl font-semibold mb-2">Not Available</h2>
+            <div
+                class="bg-white shadow-md rounded-lg p-6 text-center flex flex-col items-center justify-center space-y-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-600" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8c1.657 0 3 1.343 3 3s-1.343 3-3 3-3-1.343-3-3 1.343-3 3-3z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                </svg>
+                <h2 class="text-xl font-semibold">Not Available</h2>
                 <p class="text-3xl font-bold text-blue-600">
                     {{ $books->where('available', 0)->count() }}
                 </p>
             </div>
 
-            <div class="bg-white shadow-md rounded-lg p-6 text-center">
-                <h2 class="text-xl font-semibold mb-2">Borrowers</h2>
+            <div
+                class="bg-white shadow-md rounded-lg p-6 text-center flex flex-col items-center justify-center space-y-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-600" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M5.121 17.804A7 7 0 0112 15a7 7 0 016.879 2.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <h2 class="text-xl font-semibold">Borrowers</h2>
                 <p class="text-3xl font-bold text-blue-600">0</p>
             </div>
+        </div>
 
         </div>
 
@@ -208,6 +255,7 @@
                             <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Book No.</th>
                             <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Book Name</th>
                             <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Author</th>
+                            <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Genre</th>
                             <th class="px-6 py-3 text-left font-medium uppercase tracking-wider">Available</th>
                             <th class="px-6 py-3 text-center font-medium uppercase tracking-wider">Actions</th>
                         </tr>
@@ -216,9 +264,10 @@
                     <tbody class="bg-white divide-y divide-blue-100 text-gray-700">
                         @foreach ($books as $book)
                             <tr class="hover:bg-blue-50 transition">
-                                <td class="px-6 py-4">{{ $book->id }}</td>
+                                <td class="px-6 py-4">{{ $loop->iteration }}</td>
                                 <td class="px-6 py-4 font-semibold">{{ $book->name }}</td>
                                 <td class="px-6 py-4">{{ $book->author }}</td>
+                                <td class="px-6 py-4">{{ ucfirst(str_replace('_', ' ', $book->genre->value)) }}</td>
                                 <td class="px-6 py-4 text-center">{{ $book->available }}</td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center justify-center space-x-2">
