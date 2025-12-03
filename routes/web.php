@@ -5,6 +5,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\BorrowerController;
 
 Route::get('/', function () {
     return view('Landing');
@@ -17,4 +18,5 @@ Route::get('/home', [BookController::class, 'index'])->name('home');
 Route::post('/books/store', [BookController::class, 'store'])->name('books.store');
 Route::put('/books/{id}/update', [BookController::class, 'update'])->name('books.update');
 Route::delete('/books/{id}/delete', [BookController::class, 'destroy'])->name('books.destroy');
+Route::post('/borrowers/store', [BorrowerController::class, 'store'])->name('borrowers.store');
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout.perform');

@@ -23,7 +23,7 @@
 
     <aside x-data="{ active: 'dashboard' }" @modal-closed.window="active = 'dashboard'"
         class="w-64 bg-blue-700 text-white shadow-md h-screen p-6 fixed left-0 top-0 flex flex-col">
-        <h2 class="text-2xl font-bold mb-8">📘 Library</h2>
+        <h2 class="text-2xl font-bold mb-8">📘 E-Book Store</h2>
 
         <nav class="flex flex-col space-y-4">
             <a href="#" @click.prevent="active = 'dashboard'"
@@ -176,6 +176,75 @@
             </div>
         </div>
     </div>
+    <!-- BORROWER MODAL -->
+    <div class="modal fade" id="borrowModal" tabindex="-1" aria-labelledby="borrowModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content rounded-lg shadow-lg p-6">
+
+                <div class="modal-header border-0 px-0 pb-3">
+                    <h5 class="modal-title text-xl font-bold text-blue-600" id="borrowModalLabel">
+                        Borrower Information
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form id="borrowForm" method="POST" action="{{ route('borrowers.store') }}">
+                    @csrf
+
+                    <input type="hidden" name="book_id" id="borrowBookId">
+
+                    <div class="modal-body px-0">
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-1">Name</label>
+                            <input type="text" class="w-full border px-3 py-2 rounded text-black" name="name"
+                                required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-1">Address</label>
+                            <input type="text" class="w-full border px-3 py-2 rounded text-black" name="address"
+                                required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-1">Phone Number</label>
+                            <input type="text" class="w-full border px-3 py-2 rounded text-black"
+                                name="phone_number" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-1">Payment Method</label>
+                            <select class="w-full border px-3 py-2 rounded text-black" name="payment_method" required>
+                                <option value="cash">Cash</option>
+                                <option value="gcash">GCash</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-1">Payment Type</label>
+                            <select class="w-full border px-3 py-2 rounded text-black" name="payment_type" required>
+                                @foreach (\App\Enums\PaymentEnum::cases() as $payment)
+                                    <option value="{{ $payment->name }}">
+                                        {{ $payment->label() }} - ₱{{ $payment->value }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer px-0 border-0 flex justify-end space-x-3">
+                        <button type="button" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400"
+                            data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit"
+                            class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Save</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
 
     <main class="ml-64 flex-1">
 
@@ -205,6 +274,10 @@
                 <p class="text-3xl font-bold text-blue-600">{{ $books->count() }}</p>
             </div>
 
+            @php
+                $borrowedBooksCount = \App\Models\Payment::count();
+            @endphp
+
             <div
                 class="bg-white shadow-md rounded-lg p-6 text-center flex flex-col items-center justify-center space-y-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-600" fill="none"
@@ -213,7 +286,7 @@
                         d="M9 17v-6h6v6m2 4H7a2 2 0 01-2-2V7a2 2 0 012-2h5l2 2h5a2 2 0 012 2v12a2 2 0 01-2 2z" />
                 </svg>
                 <h2 class="text-xl font-semibold">Borrowed Books</h2>
-                <p class="text-3xl font-bold text-blue-600">0</p>
+                <p class="text-3xl font-bold text-blue-600">{{ $borrowedBooksCount }}</p>
             </div>
 
             <div
@@ -231,6 +304,10 @@
                 </p>
             </div>
 
+            @php
+                $borrowersCount = \App\Models\Borrower::count();
+            @endphp
+
             <div
                 class="bg-white shadow-md rounded-lg p-6 text-center flex flex-col items-center justify-center space-y-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-600" fill="none"
@@ -239,9 +316,8 @@
                         d="M5.121 17.804A7 7 0 0112 15a7 7 0 016.879 2.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 <h2 class="text-xl font-semibold">Borrowers</h2>
-                <p class="text-3xl font-bold text-blue-600">0</p>
+                <p class="text-3xl font-bold text-blue-600">{{ $borrowersCount }}</p>
             </div>
-        </div>
 
         </div>
 
@@ -272,7 +348,9 @@
                                 <td class="px-6 py-4">
                                     <div class="flex items-center justify-center space-x-2">
                                         <button
-                                            class="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-base transition">
+                                            class="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-base transition"
+                                            data-bs-toggle="modal" data-bs-target="#borrowModal"
+                                            onclick="document.getElementById('borrowBookId').value = {{ $book->id }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2"
                                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

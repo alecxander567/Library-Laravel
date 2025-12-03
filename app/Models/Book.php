@@ -20,4 +20,9 @@ class Book extends Model
     protected $casts = [
         'genre' => Genre::class,
     ];
+
+    public function borrower()
+    {
+        return $this->belongsTo(Borrower::class);
+    }
 }

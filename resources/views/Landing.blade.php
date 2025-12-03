@@ -47,7 +47,7 @@
     <section class="hero-bg bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 py-32">
         <div class="flex flex-col md:flex-row items-center justify-between max-w-6xl mx-auto px-6 md:gap-16 gap-10">
             <div class="text-left mb-10 md:mb-0">
-                <h2 class="text-5xl md:text-7xl font-extrabold mb-6 text-white">Welcome to MyLibrary</h2>
+                <h2 class="text-5xl md:text-7xl font-extrabold mb-6 text-white">E-Book Store</h2>
                 <p class="text-xl md:text-2xl text-white mb-8">
                     Explore thousands of books, manage your loans, and track your reading journey—all in one place.
                 </p>
