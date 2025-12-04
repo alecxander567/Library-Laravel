@@ -11,6 +11,7 @@ class Borrower extends Model
         'address',
         'phone_number',
         'payment_method',
+        'book_id', 
     ];
 
     public function payments()
@@ -18,8 +19,8 @@ class Borrower extends Model
         return $this->hasMany(Payment::class);
     }
 
-    public function books()
+    public function book()
     {
-        return $this->hasMany(Book::class);
+        return $this->belongsTo(Book::class); 
     }
 }

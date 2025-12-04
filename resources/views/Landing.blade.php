@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library System</title>
+    <title>E-Book Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
 
     <header class="bg-blue-700 text-white py-4 shadow-md">
         <div class="container mx-auto flex justify-between items-center px-6">
-            <h1 class="text-2xl font-bold">📚 MyLibrary</h1>
+            <h1 class="text-2xl font-bold">📚 E-Book Store</h1>
 
             <nav class="flex space-x-4">
                 <a href="/" class="hover:text-gray-200 transition">Home</a>
@@ -66,7 +66,7 @@
 
     <section class="py-16 bg-gray-100">
         <div class="container mx-auto px-6 text-center">
-            <h3 class="text-3xl font-bold mb-12">Why Choose MyLibrary?</h3>
+            <h3 class="text-3xl font-bold mb-12">Why Choose E-Book Store?</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
                 <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition flex flex-col items-center">

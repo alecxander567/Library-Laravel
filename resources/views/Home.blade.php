@@ -38,9 +38,9 @@
                 📚 Add Book
             </a>
 
-            <a href="#" @click.prevent="active = 'borrowers'"
-                :class="active === 'borrowers' ? 'bg-blue-800 rounded px-2 py-1' : 'hover:text-blue-200'"
-                class="text-lg font-medium">
+            <a href="#" class="text-lg font-medium" data-bs-toggle="modal" data-bs-target="#borrowersModal"
+                @click.prevent="active = 'borrowers'"
+                :class="active === 'borrowers' ? 'bg-blue-800 rounded px-2 py-1' : 'hover:text-blue-200'">
                 👥 Borrowers
             </a>
 
@@ -245,6 +245,71 @@
             </div>
         </div>
     </div>
+    <!-- Borrowers Modal -->
+    <div class="modal fade" id="borrowersModal" tabindex="-1" aria-labelledby="borrowersModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered"> <!-- Changed to extra large -->
+            <div class="modal-content shadow-lg rounded-4 border-0">
+
+                <!-- Modal Header -->
+                <div class="modal-header bg-primary text-white border-0"> <!-- Keep solid blue theme -->
+                    <h5 class="modal-title fw-bold" id="borrowersModalLabel">All Borrowers</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body bg-white">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-primary text-white">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Book Borrowed</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Phone</th>
+                                    <th scope="col">Payment Method</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($borrowers as $borrower)
+                                    <tr>
+                                        <th scope="row">{{ $loop->iteration }}</th>
+                                        <td class="fw-semibold">{{ $borrower->name }}</td>
+                                        <td>
+                                            <span class="text-primary fw-medium">
+                                                {{ $borrower->book ? $borrower->book->name : 'N/A' }}
+                                            </span>
+                                        </td>
+                                        <td>{{ $borrower->address }}</td>
+                                        <td>{{ $borrower->phone_number }}</td>
+                                        <td>
+                                            <span
+                                                class="badge bg-success text-uppercase">{{ $borrower->payment_method }}</span>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted fst-italic">No borrowers
+                                            found.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer border-0 justify-content-center bg-white">
+                    <button type="button" class="btn btn-primary rounded-pill px-4" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     <main class="ml-64 flex-1">
 
@@ -394,6 +459,8 @@
     </main>
 
     <script>
+        const borrowersModal = document.getElementById('borrowersModal');
+
         function setEditFormData(id, name, author, available) {
             document.getElementById('bookName').value = name;
             document.getElementById('bookAuthor').value = author;
@@ -413,6 +480,11 @@
                     if (form) form.action = `/books/${id}/delete`;
                 });
             }
+        });
+
+        borrowersModal.addEventListener('hidden.bs.modal', () => {
+            // Dispatch Alpine event to reset active menu
+            window.dispatchEvent(new CustomEvent('modal-closed'));
         });
     </script>
 

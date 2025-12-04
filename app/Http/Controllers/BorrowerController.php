@@ -18,21 +18,22 @@ class BorrowerController extends Controller
             'phone_number'   => 'required|string|max:20',
             'book_id'        => 'required|exists:books,id',
             'payment_type'   => 'required|string|in:' . implode(',', array_map(fn($p) => $p->name, \App\Enums\PaymentEnum::cases())),
-            'payment_method' => 'required|in:cash,gcash', 
+            'payment_method' => 'required|in:cash,gcash',
         ]);
 
         $borrower = Borrower::create([
             'name'           => $validated['name'],
             'address'        => $validated['address'],
             'phone_number'   => $validated['phone_number'],
-            'payment_method' => $validated['payment_method'], 
+            'payment_method' => $validated['payment_method'],
+            'book_id'        => $validated['book_id'],
         ]);
 
         $book = Book::find($validated['book_id']);
-        if ($book && $book->available > 0) { 
+        if ($book && $book->available > 0) {
             $book->update([
                 'borrower_id' => $borrower->id,
-                'available'   => $book->available - 1, 
+                'available'   => $book->available - 1,
             ]);
         } else {
             return back()->with('error', 'Selected book is not available.');
@@ -46,5 +47,12 @@ class BorrowerController extends Controller
         ]);
 
         return back()->with('success', 'Borrower and payment added successfully!');
+    }
+
+    public function index()
+    {
+        $borrowers = Borrower::with('book', 'payment')->get();
+
+        return view('borrowers', compact('borrowers'));
     }
 }
