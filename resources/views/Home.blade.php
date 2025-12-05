@@ -44,11 +44,10 @@
                 👥 Borrowers
             </a>
 
-            <a href="#" @click.prevent="active = 'outOfDate'"
-                :class="active === 'outOfDate' ? 'bg-blue-800 rounded px-2 py-1' : 'hover:text-blue-200'"
-                class="text-lg font-medium">
-                ⏰ Out of Date
+            <a href="#" class="text-lg font-medium" data-bs-toggle="modal" data-bs-target="#topBooksModal">
+                ⭐ Top books
             </a>
+
         </nav>
     </aside>
 
@@ -248,17 +247,13 @@
     <!-- Borrowers Modal -->
     <div class="modal fade" id="borrowersModal" tabindex="-1" aria-labelledby="borrowersModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered"> <!-- Changed to extra large -->
+        <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content shadow-lg rounded-4 border-0">
-
-                <!-- Modal Header -->
-                <div class="modal-header bg-primary text-white border-0"> <!-- Keep solid blue theme -->
+                <div class="modal-header bg-primary text-white border-0">
                     <h5 class="modal-title fw-bold" id="borrowersModalLabel">All Borrowers</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
-
-                <!-- Modal Body -->
                 <div class="modal-body bg-white">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
@@ -299,12 +294,30 @@
                         </table>
                     </div>
                 </div>
-
-                <!-- Modal Footer -->
                 <div class="modal-footer border-0 justify-content-center bg-white">
                     <button type="button" class="btn btn-primary rounded-pill px-4" data-bs-dismiss="modal">
                         Close
                     </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Top Books Modal -->
+    <div class="modal fade" id="topBooksModal" tabindex="-1" aria-labelledby="topBooksModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content shadow-lg rounded-3 border-0">
+                <div class="modal-header bg-primary text-white rounded-top">
+                    <h5 class="modal-title" id="topBooksModalLabel">⭐ Top Borrowed Books</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-light p-4" id="topBooksContainer">
+                    <div class="text-center text-muted">Loading...</div>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn btn-primary btn-lg" data-bs-dismiss="modal">Close</button>
                 </div>
 
             </div>
@@ -483,8 +496,48 @@
         });
 
         borrowersModal.addEventListener('hidden.bs.modal', () => {
-            // Dispatch Alpine event to reset active menu
             window.dispatchEvent(new CustomEvent('modal-closed'));
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('topBooksModal');
+            modal.addEventListener('show.bs.modal', function() {
+                fetch("{{ route('books.top') }}")
+                    .then(response => response.json())
+                    .then(data => {
+                        const container = document.getElementById('topBooksContainer');
+                        if (data.length === 0) {
+                            container.innerHTML =
+                                '<p class="text-center text-muted">No books borrowed yet.</p>';
+                            return;
+                        }
+
+                        container.innerHTML = `
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle text-center mb-0">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Book Name</th>
+                                    <th>Author</th>
+                                    <th>Times Borrowed</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.map((book, index) => `
+                                                                    <tr>
+                                                                        <td>${index + 1}</td>
+                                                                        <td>${book.name}</td>
+                                                                        <td>${book.author}</td>
+                                                                        <td><span class="badge bg-success">${book.borrow_count}</span></td>
+                                                                    </tr>
+                                                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                    });
+            });
         });
     </script>
 

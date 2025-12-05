@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Book;
 use App\Enums\Genre;
+use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
@@ -53,6 +54,18 @@ class BookController extends Controller
         ]);
 
         return redirect()->route('home')->with('success', 'Book updated successfully!');
+    }
+
+    public function topBooks()
+    {
+        $topBooks = Book::select('books.*', DB::raw('COUNT(borrowers.id) as borrow_count'))
+            ->leftJoin('borrowers', 'books.id', '=', 'borrowers.book_id')
+            ->groupBy('books.id')
+            ->orderByDesc('borrow_count')
+            ->take(5)
+            ->get();
+
+        return response()->json($topBooks);
     }
 
     public function destroy($id)

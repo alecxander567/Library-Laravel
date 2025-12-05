@@ -27,4 +27,5 @@ Route::post('/books/store', [BookController::class, 'store'])->name('books.store
 Route::put('/books/{id}/update', [BookController::class, 'update'])->name('books.update');
 Route::delete('/books/{id}/delete', [BookController::class, 'destroy'])->name('books.destroy');
 Route::post('/borrowers/store', [BorrowerController::class, 'store'])->name('borrowers.store');
+Route::get('/top-books', [BookController::class, 'topBooks'])->name('books.top');
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout.perform');
